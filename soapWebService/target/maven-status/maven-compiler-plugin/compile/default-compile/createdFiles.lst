@@ -1,0 +1,9 @@
+com\epam\kostiuk\webservice\exception\InvalidOperationException.class
+com\epam\kostiuk\webservice\operations\Mul.class
+com\epam\kostiuk\webservice\operations\Div.class
+com\epam\kostiuk\webservice\operations\Sub.class
+com\epam\kostiuk\webservice\operations\CalculatorOperation.class
+com\epam\kostiuk\webservice\CalculatorWebService.class
+com\epam\kostiuk\webservice\operations\Pow.class
+com\epam\kostiuk\webservice\exception\IllegalOperandValueException.class
+com\epam\kostiuk\webservice\operations\Add.class
