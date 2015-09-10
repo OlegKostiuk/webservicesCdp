@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -18,6 +19,10 @@ import org.testng.annotations.Test;
 public class CalculatorRestTest {
 
     public static final String FORMAT = "%.4f";
+    public static final Logger LOGGER = Logger.getLogger(CalculatorRestRequest.class);
+    public static final String RESPONCE_CODE_RECEIVED = "Responce code received: ";
+    public static final String RESULT_RECEIVED = "Result received: ";
+    public static final String ERROR_MESSAGE_RECEIVED = "Error message received: ";
 
     @DataProvider(name = "validInput")
     public static Object[][] validInput() {
@@ -59,12 +64,16 @@ public class CalculatorRestTest {
 
         Response response = new CalculatorRestRequest().performOperation(operation, value1, value2);
 
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), "Not valid response received");
+        int actualResponceCode =  response.getStatus();
+        LOGGER.info(RESPONCE_CODE_RECEIVED + actualResponceCode);
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), actualResponceCode, "Not valid response received");
 
         ObjectMapper mapper = new ObjectMapper();
         Result result = mapper.readValue(response.readEntity(String.class), Result.class);
 
-        Assert.assertEquals(String.format(FORMAT, result.getResult()),
+        double actualResult = result.getResult();
+        LOGGER.info(RESULT_RECEIVED + actualResult);
+        Assert.assertEquals(String.format(FORMAT, actualResult),
             String.format(FORMAT, operation.perform(value1, value2)));
 
     }
@@ -77,13 +86,17 @@ public class CalculatorRestTest {
 
         Response response = new CalculatorRestRequest().performOperation(CalculatorOperation.DIV, value1, value2);
 
-        Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus(),
+        int actualResponceCode =  response.getStatus();
+        LOGGER.info(RESPONCE_CODE_RECEIVED + actualResponceCode);
+        Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), actualResponceCode,
             "Not valid response received");
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
 
-        Assert.assertEquals(errorResult.getError(), "Division on zero.", "Error message not found");
+        String actualErrorMessage = errorResult.getError();
+        LOGGER.info(ERROR_MESSAGE_RECEIVED + actualErrorMessage);
+        Assert.assertEquals(actualErrorMessage, "Division on zero.", "Error message not found");
     }
 
     @Test
@@ -93,7 +106,9 @@ public class CalculatorRestTest {
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
 
-        Assert.assertEquals(errorResult.getError(), "Invalid operation exception",
+        String actualErrorMessage = errorResult.getError();
+        LOGGER.info(ERROR_MESSAGE_RECEIVED + actualErrorMessage);
+        Assert.assertEquals(actualErrorMessage, "Invalid operation exception",
             "Invalid operator message not found.");
 
     }
@@ -112,7 +127,9 @@ public class CalculatorRestTest {
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
 
-        Assert.assertEquals(errorResult.getError(), "Invalid input.", "Error message not found");
+        String actualErrorMessage = errorResult.getError();
+        LOGGER.info(ERROR_MESSAGE_RECEIVED + actualErrorMessage);
+        Assert.assertEquals(actualErrorMessage, "Invalid input.", "Error message not found");
 
     }
 
@@ -130,7 +147,9 @@ public class CalculatorRestTest {
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
 
-        Assert.assertEquals(errorResult.getError(), "Value is out of float range.", "Error message not found");
+        String actualErrorMessage = errorResult.getError();
+        LOGGER.info(ERROR_MESSAGE_RECEIVED + actualErrorMessage);
+        Assert.assertEquals(actualErrorMessage, "Value is out of float range.", "Error message not found");
 
     }
 
