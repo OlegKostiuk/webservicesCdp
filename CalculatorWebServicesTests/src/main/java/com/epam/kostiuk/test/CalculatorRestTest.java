@@ -23,6 +23,7 @@ public class CalculatorRestTest {
     public static final String RESPONCE_CODE_RECEIVED = "Responce code received: ";
     public static final String RESULT_RECEIVED = "Result received: ";
     public static final String ERROR_MESSAGE_RECEIVED = "Error message received: ";
+    public static final String MSSG_NOT_VALID_RESPONSE_RECEIVED = "Not valid response received";
 
     @DataProvider(name = "validInput")
     public static Object[][] validInput() {
@@ -66,7 +67,7 @@ public class CalculatorRestTest {
 
         int actualResponceCode =  response.getStatus();
         LOGGER.info(RESPONCE_CODE_RECEIVED + actualResponceCode);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), actualResponceCode, "Not valid response received");
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), actualResponceCode, MSSG_NOT_VALID_RESPONSE_RECEIVED);
 
         ObjectMapper mapper = new ObjectMapper();
         Result result = mapper.readValue(response.readEntity(String.class), Result.class);
@@ -89,7 +90,7 @@ public class CalculatorRestTest {
         int actualResponceCode =  response.getStatus();
         LOGGER.info(RESPONCE_CODE_RECEIVED + actualResponceCode);
         Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), actualResponceCode,
-            "Not valid response received");
+            MSSG_NOT_VALID_RESPONSE_RECEIVED);
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
@@ -122,7 +123,7 @@ public class CalculatorRestTest {
         Response response = new CalculatorRestRequest().performOperation(CalculatorOperation.POW, value1, value2);
 
         Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus(),
-            "Not valid response received");
+            MSSG_NOT_VALID_RESPONSE_RECEIVED);
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
@@ -142,7 +143,7 @@ public class CalculatorRestTest {
         Response response = new CalculatorRestRequest().performOperation(CalculatorOperation.DIV, value1, value2);
 
         Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus(),
-            "Not valid response received");
+            MSSG_NOT_VALID_RESPONSE_RECEIVED);
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResult errorResult = mapper.readValue(response.readEntity(String.class), ErrorResult.class);
